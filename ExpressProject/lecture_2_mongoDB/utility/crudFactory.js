@@ -150,7 +150,12 @@ const deleteByIdFactory=(ElementModel)=>{
                         res.cookie("jwt", token, { maxAge: 90000000, httpOnly: true, path: "/" });
                         res.status(200).json({
                             status: "success",
-                            message: "user logged In"
+                            message: "user logged In",
+                            user:{
+                                email:user.email,
+                                name: user.name,
+                                role: user.role
+                            }
                         })
                     } else {
                         console.log("err", err)

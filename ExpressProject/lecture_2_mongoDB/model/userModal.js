@@ -16,11 +16,11 @@ const userSchemaRules={
     }
     ,
     confirmPassword:{type:String,
-        // required: true,
+        required: true,
         minLength: 8,
-        // validate: function(){
-        //       return this.password == this.confirmPassword
-        // }
+        validate: function(){
+              return this.password == this.confirmPassword
+        }
 },
     createdAt:{
         type:Date,
@@ -49,16 +49,18 @@ const validRoles = ["admin","user","seller"];
 const userSchema =new mongoose.Schema(userSchemaRules);
 userSchema.pre("save", function(next){
     this.confirmPassword=undefined;
+    // let isValid= false;
     if(this.role){
         const isValid= validRoles.includes(this.role);
+        if(!isValid){
+            next(new Error("User can be either admin, user, or seller"));
+        }
+        else{
+            next();
+    
+        }
     }
-    if(!isValid){
-        next(new Error("User can be either admin, user, or seller"));
-    }
-    else{
-        next();
-
-    }
+    
 })
 
 const userModel = mongoose.model("userModel", userSchema);
